@@ -11,8 +11,6 @@
 //
 // Execute `rustlings hint hashmaps2` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 #[derive(Hash, PartialEq, Eq)]
@@ -34,9 +32,7 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
     ];
 
     for fruit in fruit_kinds {
-        // TODO: Put new fruits if not already present. Note that you
-        // are not allowed to put any type of fruit that's already
-        // present!
+        basket.entry(fruit).or_insert(0);
     }
 }
 
@@ -49,6 +45,8 @@ mod tests {
         basket.insert(Fruit::Apple, 4);
         basket.insert(Fruit::Mango, 2);
         basket.insert(Fruit::Lychee, 5);
+        basket.insert(Fruit::Pineapple, 11);
+        basket.insert(Fruit::Banana, 20);
 
         basket
     }
@@ -60,6 +58,25 @@ mod tests {
         assert_eq!(*basket.get(&Fruit::Apple).unwrap(), 4);
         assert_eq!(*basket.get(&Fruit::Mango).unwrap(), 2);
         assert_eq!(*basket.get(&Fruit::Lychee).unwrap(), 5);
+        // pub fn get<Q>(&self, k: &Q) -> Option<&V>
+        //     where
+        //     Q: ?Sized,
+        //     K: Borrow<Q>,
+        //     Q: Hash + Eq,
+        //    
+        // trait Borrow<Q> for K -> can get an equivelent Q from K and that K borrows as Q (K == Q
+        // and K.borrow() = Q.borrow()).
+        //
+        // If K borrows as a Q, I can directly accept Q.
+        //
+        // HashMap<&str, i32>
+        //
+        // get(&self, k: K) -> ...
+        //
+        // I can pass in a:
+        //  - &str
+        //  - String (owned)
+        //  - Cant pass in a &String
     }
 
     #[test]
@@ -73,7 +90,6 @@ mod tests {
     #[test]
     fn greater_than_eleven_fruits() {
         let mut basket = get_fruit_basket();
-        fruit_basket(&mut basket);
         let count = basket.values().sum::<u32>();
         assert!(count > 11);
     }

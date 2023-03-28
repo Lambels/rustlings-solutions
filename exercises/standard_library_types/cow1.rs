@@ -9,6 +9,8 @@
 
 use std::borrow::Cow;
 
+// use 2 lifetimes to allow the compiler to monomorphise or replace them independently. This is
+// because &mut T is invariant over
 fn abs_all<'a, 'b>(input: &'a mut Cow<'b, [i32]>) -> &'a mut Cow<'b, [i32]> {
     for i in 0..input.len() {
         let v = input[i];
@@ -39,7 +41,7 @@ fn main() {
 
     // No clone occurs because `input` is already owned.
     let slice = vec![-1, 0, 1];
-    let mut input = Cow::from(slice);
+    let mut input = Cow::from(&slice[..]);
     match abs_all(&mut input) {
         // TODO
         Cow::Borrowed(_) => println!("I own this slice!"),

@@ -9,14 +9,23 @@
 // implementing this trait.
 // Execute `rustlings hint traits1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+use std::ops::Add;
 
 trait AppendBar {
     fn append_bar(self) -> Self;
 }
 
-impl AppendBar for String {
-    // TODO: Implement `AppendBar` for type `String`.
+// Blanket implement AppendBar for all type which support the adition of a string ref.
+// This includes normals strings.
+//
+// I am using a 'a lifetime which basically states that I want this trait to be implemented on each
+// T which implements add with a string lifetime of 'a. This can be monomorphised or 'a can be
+// replaced by any lifetime. I could also only implement Add for Add<&'static str ...> which would
+// be more restrictive.
+impl<'a, T: Add<&'a str, Output = T>> AppendBar for T {
+    fn append_bar(self) -> Self {
+        self.add("Bar")
+    }
 }
 
 fn main() {

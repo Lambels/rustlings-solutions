@@ -7,9 +7,13 @@
 //
 // Execute `rustlings hint lifetimes1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
-fn longest(x: &str, y: &str) -> &str {
+// Add lifetime annotations to show the compiler the links between the input lifetimes and the
+// output lifetimes. This is needed because a function cannot produce a return value lifetime since
+// it would outlive its stack scope.
+//
+// Here we are telling it that the return lifetime of the str ref is linked to the two input
+// values. It will be equal to the lowest common denominator of the 2.
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     if x.len() > y.len() {
         x
     } else {
