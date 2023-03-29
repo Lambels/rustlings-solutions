@@ -35,10 +35,35 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let mut person = Person::default();
+        if s.len() == 0 {
+            return person;
+        }
+
+        let mut split = s.split(',');
+        let mut name = String::default();
+        let mut age = usize::default();
+
+        match split.next() {
+            Some(v) if v != "" => name.extend(v.chars()),
+            _ => return person,
+        }
+
+        match split.next().map(|v| v.parse::<usize>()) {
+            Some(Ok(v)) => age = v,
+            _ => return person,
+        }
+
+        if let Some(_) = split.next() {
+            return person;
+        }
+
+        Person {
+            name,
+            age,
+        }
     }
 }
 
@@ -64,14 +89,14 @@ mod tests {
     #[test]
     fn test_bad_convert() {
         // Test that John is returned when bad string is provided
-        let p = Person::from("");
+        let p = dbg!(Person::from(""));
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
     }
     #[test]
     fn test_good_convert() {
         // Test that "Mark,20" works
-        let p = Person::from("Mark,20");
+        let p = dbg!(Person::from("Mark,20"));
         assert_eq!(p.name, "Mark");
         assert_eq!(p.age, 20);
     }
@@ -120,7 +145,7 @@ mod tests {
 
     #[test]
     fn test_trailing_comma() {
-        let p: Person = Person::from("Mike,32,");
+        let p: Person = dbg!(Person::from("Mike,32,"));
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
     }
